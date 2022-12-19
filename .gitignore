@@ -222,5 +222,4 @@ cython_debug/
 .history
 .ionide
 
-/reports
-*.tmp
+reports/
