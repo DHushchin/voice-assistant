@@ -7,22 +7,24 @@ import threading
 
 
 class ListenerGUI:
+    
     def __init__(self):
         self.__create_window()
         self.stream = None
         self.audio_data = np.array([])
         self.audio_port = pyaudio.PyAudio()
         self.is_listening = False
-        
         self.listener = Listener()
         self.data = np.array([])
+        self.thread = None
         
         
     def __create_window(self):
         AppFont = ('Helvetica', 14, 'bold italic')
         sg.theme('DarkBlue13')
         layout = [
-                    [sg.Image(filename='images/voice.gif', size=(568, 300), key='_GIF_')],
+                    [sg.Image(filename='images/voice.gif', 
+                              size=(568, 300), key='_GIF_')],
                 
                     [sg.ProgressBar(15000, orientation='h',
                                     size=(20, 20), key='prog_bar', 
@@ -37,14 +39,15 @@ class ListenerGUI:
         self.window = sg.Window('Voice Assistant', layout, finalize=True)
         
         
-    def __stop(self):
+    def __stop(self):        
         if self.stream:
-            # self.listener.audio_to_text(self.data.reshape(-1))
             self.stream.stop_stream()
             self.stream.close()
             self.window['prog_bar'].update(0)
             self.window.find_element('Stop').Update(disabled=True)
             self.window.find_element('Listen').Update(disabled=False)
+        self.is_listening = False
+        self.thread.join()
 
 
     def __callback(self, in_data, frame_count, time_info, status):
@@ -64,8 +67,6 @@ class ListenerGUI:
                                            stream_callback=self.__callback)
         self.stream.start_stream()
         
-        # self.listener.audio_to_text(self.audio_data)
-        
     
     def __visualize(self):
         if self.audio_data.size != 0 and self.is_listening:
@@ -75,8 +76,15 @@ class ListenerGUI:
                 self.window['_GIF_'].UpdateAnimation('images/voice.gif', time_between_frames=30)
             else:
                 self.window['prog_bar'].update(0)
-                            
-      
+                
+            self.window.refresh()
+            
+            
+    def __listen_thread(self):
+        self.thread = threading.Thread(target=self.listener.audio_to_text)
+        self.thread.start()        
+
+                               
     def run(self):
         while True:
             event, values = self.window.read(timeout=0)             
@@ -89,13 +97,15 @@ class ListenerGUI:
             if event == 'Listen':
                 self.is_listening = True
                 self.__listen()
-                threading.Thread(target=self.listener.audio_to_text).start()
+                self.__listen_thread()
                 
+            if self.is_listening and not self.thread.is_alive():
+                self.thread.join()
+                self.__listen_thread()
+
             if event == 'Stop':
-                self.is_listening = False
                 self.__stop()
                 
             self.__visualize()
-                    
-                
+                                  
         self.window.close()

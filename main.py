@@ -1,6 +1,5 @@
 from gui import ListenerGUI
 
-
 def main():
     gui = ListenerGUI()
     gui.run()
