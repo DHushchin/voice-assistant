@@ -1,0 +1,18 @@
+What's the weather in {city}?
+{prepend_request} give me the weather right now in {country}
+{prepend_request} get the forecast in {city}
+{prepend_request} locate the forecast for the next {amount_of_time} in {country}
+{prepend_request} tell me what the weather will be over the next {amount_of_time} in {city}
+{prepend_request} get the weather for {datetime} in {country}
+{prepend_request} find me forecast for {datetime} in {city}
+{prepend_request} get the weather for {date} in {country}
+{prepend_request} find me forecast for {date} in {city}
+What's the weather in {country}?
+{prepend_request} give me the weather right now in {city}
+{prepend_request} get the forecast in {country}
+{prepend_request} locate the forecast for the next {amount_of_time} in {city}
+{prepend_request} tell me what the weather will be over the next {amount_of_time} in {country}
+{prepend_request} get the weather for {datetime} in {city}
+{prepend_request} find me forecast for {datetime} in {country}
+{prepend_request} get the weather for {date} in {city}
+{prepend_request} find me forecast for {date} in {country}

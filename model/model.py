@@ -1,7 +1,7 @@
 import json
 import pandas as pd
 import tensorflow as tf
-from transformers import TFDistilBertModel, DistilBertTokenizerFast
+from transformers import TFDistilBertModel
 from model.tokenizer import Tokenizer
 
 

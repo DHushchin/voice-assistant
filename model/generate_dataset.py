@@ -1,4 +1,4 @@
-import os
+from config import Config
 import json
 import random
 import itertools
@@ -8,13 +8,14 @@ from pathlib import Path
 
 
 class DatasetGenerator:
-    def __init__(self, samples_per_intent=512, duplicates=False):
+    def __init__(self, dataset_path, samples_per_intent, duplicates):
         """
         Inputs:
             - dataset_path:       path to the train.pkl output
             - samples_per_intent: number of samples to generate per intent
             - duplicates:         allow duplicate prompts to fill the [samples_per_intent] quota
         """
+        self.dataset_path = dataset_path
         self.samples_per_intent = samples_per_intent
         self.duplicates = duplicates
         
@@ -29,10 +30,6 @@ class DatasetGenerator:
             - train.pkl:          full training dataset
         """
 
-        if not os.path.isdir(self.dataset_path):
-            print('Dataset directory does not exist')
-            return
-
         entities = self.__load_entities()
         intents = self.__load_intents()
         intent_labels, entity_labels = self.__generate_labels(intents, entities)
@@ -41,18 +38,18 @@ class DatasetGenerator:
         permutated_prompts = self.__permutate_prompts(filled_prompts)
         generated_prompts = self.__entity_labels_to_words(permutated_prompts)
         
-        dataset = self.__generate_dataset(generated_prompts, intent_labels, entity_labels)
+        dataset = self.__generate_dataset(generated_prompts, intent_labels)
         self.__save_dataset(dataset, intent_labels, entity_labels)
             
             
     def __load_entities(self):
-        entity_files = glob.glob(f'./raw/entities/*.entity', recursive=True)
+        entity_files = glob.glob(f'{self.dataset_path}/raw/entities/*.entity', recursive=True)
         
         entities = {}
         entity_id = 1
-        for file in entity_files:
-            name = Path(file).stem
-            samples = [(e.lower(), entity_id) for e in open(file).read().splitlines() if not e.startswith('#')]
+        for entity_file in entity_files:
+            name = Path(entity_file).stem
+            samples = [(e.lower(), entity_id) for e in open(entity_file).read().splitlines() if not e.startswith('#')]
             entities[name] = samples
             entity_id += 1
             
@@ -60,18 +57,18 @@ class DatasetGenerator:
     
     
     def __load_intents(self):
-        intent_files = glob.glob(f'./raw/intents/*.intent', recursive=True)
+        intent_files = glob.glob(f'{self.dataset_path}/raw/intents/*.intent', recursive=True)
         
         intents = {}
-        for file in intent_files:
-            name = Path(file).stem
-            samples = [i.lower() for i in open(file).read().splitlines() if not i.startswith('#')]
+        for intent_file in intent_files:
+            name = Path(intent_file).stem
+            samples = [i.lower() for i in open(intent_file).read().splitlines() if not i.startswith('#')]
             intents[name] = samples
         
         return intents
         
         
-    def __get_labels(self, intents, entities):
+    def __generate_labels(self, intents, entities):
         intent_labels = {}
         entity_labels = {}
 
@@ -80,8 +77,8 @@ class DatasetGenerator:
             intent_labels[x] = category
             x += 1
 
-        x = 1 
-        # start at 1 to make room for null entity
+        x = 1 # start at 1 to make room for null entity
+        
         for category in entities:
             entity_labels[x] = category
             x += 1
@@ -89,7 +86,7 @@ class DatasetGenerator:
         return intent_labels, entity_labels
     
     
-    def __slot_filling(self, entities, intents):
+    def __slot_filling(self, intents, entities):
         filled_prompts = {}
         
         for category in intents:
@@ -98,7 +95,7 @@ class DatasetGenerator:
             for sample in intents[category]:
                 filled_prompts[category].append(
                     [entities[word[1:-1]] if word.startswith('{') and word.endswith('}') 
-                    else [(word, 0)] for word in sample.split()]
+                    else [(word, 0)] for word in sample[0]]
                 )  
                 
         return filled_prompts     
@@ -139,7 +136,7 @@ class DatasetGenerator:
         return generated_prompts    
     
     
-    def __generate_dataset(self, generated_prompts, intent_labels, entity_labels):
+    def __generate_dataset(self, generated_prompts, intent_labels):
         dataset = []
 
         for category in generated_prompts:
@@ -163,16 +160,23 @@ class DatasetGenerator:
     
     def __save_dataset(self, dataset, intent_labels, entity_labels):
         df = pd.DataFrame(dataset)
-        df.to_pickle(f'./train.pkl')
+        df.to_pickle(f'{self.dataset_path}/train.pkl')
 
-        with open(f'./intent_labels.json', 'w') as f:
+        with open(f'{self.dataset_path}/intent_labels.json', 'w') as f:
             json.dump(intent_labels, f)
         
-        with open(f'./entity_labels.json', 'w') as f:
+        with open(f'{self.dataset_path}/entity_labels.json', 'w') as f:
             json.dump(entity_labels, f)
             
             
 if __name__ == '__main__':
-    generator = DatasetGenerator()
+    cfg = Config()
+    
+    generator = DatasetGenerator(
+        dataset_path=cfg.dataset_path,
+        samples_per_intent=cfg.samples_per_intent,
+        duplicates=cfg.duplicates
+    )
+    
     generator.generate_dataset()
      
