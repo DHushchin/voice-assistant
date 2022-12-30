@@ -69,7 +69,7 @@ class VoiceAssistant:
         classification = self.nlp.classify(prompt, self.cfg.prompt_padding)
         print(classification)
         # response = self.plugins.generate_response(classification['intent'], classification['entities'])
-
+        
         # return response
     
 
