@@ -8,6 +8,7 @@ What's the weather in {city}?
 {prepend_request} get the weather for {date} in {country}
 {prepend_request} find me forecast for {date} in {city}
 What's the weather in {country}?
+What is the temperature in {city} on {date}?
 {prepend_request} give me the weather right now in {city}
 {prepend_request} get the forecast in {country}
 {prepend_request} locate the forecast for the next {amount_of_time} in {city}

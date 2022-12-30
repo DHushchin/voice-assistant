@@ -1,4 +1,3 @@
-from config import Config
 import json
 import random
 import itertools
@@ -95,7 +94,7 @@ class DatasetGenerator:
             for sample in intents[category]:
                 filled_prompts[category].append(
                     [entities[word[1:-1]] if word.startswith('{') and word.endswith('}') 
-                    else [(word, 0)] for word in sample[0]]
+                    else [(word, 0)] for word in sample.split()]
                 )  
                 
         return filled_prompts     
@@ -167,16 +166,4 @@ class DatasetGenerator:
         
         with open(f'{self.dataset_path}/entity_labels.json', 'w') as f:
             json.dump(entity_labels, f)
-            
-            
-if __name__ == '__main__':
-    cfg = Config()
-    
-    generator = DatasetGenerator(
-        dataset_path=cfg.dataset_path,
-        samples_per_intent=cfg.samples_per_intent,
-        duplicates=cfg.duplicates
-    )
-    
-    generator.generate_dataset()
      

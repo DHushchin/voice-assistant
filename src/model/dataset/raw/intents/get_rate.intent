@@ -1,0 +1,5 @@
+{prepend_request} tell me currency exchange of {currency} to {currency}
+{prepend_request} give me rate of {currency} to {currency}
+Can you convert {currency} to {currency}
+I want to know about convertion of {currency} to {currency}
+Do you know exchange rate of {currency} to {currency}
