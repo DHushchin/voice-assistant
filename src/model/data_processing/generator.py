@@ -153,7 +153,7 @@ class DatasetGenerator:
                     'prompt_intent': list(intent_labels.values()).index(category),
                     'word_entities': [w[1] for w in samples[sample]]
                 })    
-                
+
         return dataset
     
     
@@ -166,4 +166,4 @@ class DatasetGenerator:
         
         with open(f'{self.dataset_path}/entity_labels.json', 'w') as f:
             json.dump(entity_labels, f)
-     
+        

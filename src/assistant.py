@@ -1,16 +1,27 @@
 from model.model import Model
 from model.data_processing.generator import DatasetGenerator
 from model.config import Config
+from plugins.integrator import Integrator
+from speaker import Speaker
+from listener import Listener
 
 
 class VoiceAssistant:
     
-    def __init__(self):
-        """ Initialize all integration classes & prepare Aurras for general use """
+    def __init__(self, train=False):
         self.cfg = Config()
+        self.integrator = Integrator()
+        self.listener = Listener()
+        self.speaker = Speaker()
+        
+        if train:
+            self.build_dataset()
+            self.build_model()
+            
+        self.load_model()
 
 
-    def load(self):
+    def load_model(self):
         """ Load in a pre-trained NLP model """
 
         intent_label_path = f'{self.cfg.dataset_path}/intent_labels.json'
@@ -23,6 +34,7 @@ class VoiceAssistant:
                 self.cfg.model_name
             )
         
+        self.nlp.build_model()
         self.nlp.load_model(self.cfg.model_path)
 
 
@@ -66,36 +78,19 @@ class VoiceAssistant:
              - response: Response json object
         """
         
-        classification = self.nlp.classify(prompt, self.cfg.prompt_padding)
-        print(classification)
-        # response = self.plugins.generate_response(classification['intent'], classification['entities'])
-        
-        # return response
-    
+        classification = self.nlp.classify(prompt, self.cfg.prompt_padding)        
+        response = self.integrator.generate_response(classification['intent'], classification['entities'])
+
+        return response
+
 
     def interact(self):
-        """ Start a conversation with Aurras - text based """
-        print('\n\n')
-        print('Live interactive console loaded')
-
         while True:
-            # get the user's prompt
             print('=> ', end='')
-            prompt = input()
+            prompt = self.listener.voice_to_text()
 
-            if (prompt.lower() == 'exit'): # exit case
+            if (prompt.lower() == 'exit'):
                 break
 
             response = self.ask(prompt)
-            # print(response['response'])
-            # print('')
-            
-            
-assistant = VoiceAssistant()
-train = True
-if train:
-    assistant.build_dataset()
-    assistant.build_model()
-    
-assistant.load()
-assistant.interact()
+            self.speaker.text_to_voice(response)

@@ -3,7 +3,9 @@ import pandas as pd
 import tensorflow as tf
 from transformers import TFDistilBertModel
 from model.tokenizer import Tokenizer
+import os
 
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
 
 class Model:
     def __init__(self, intent_labels_path: str, entity_labels_path: str, padding: int, model_name: str):
@@ -143,8 +145,7 @@ class Model:
              - model_path: Path to the weights of the pre-trained model
              
         """
-        print('Loading model...')
-        self.build_model()
+        print('Loading weights...')
         print(model_path)
         self.model.load_weights(model_path)
 

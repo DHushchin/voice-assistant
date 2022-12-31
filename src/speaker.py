@@ -5,8 +5,8 @@ class Speaker:
         self.engine = tts.init()
         voices = self.engine.getProperty('voices')
         self.engine.setProperty('voice', voices[1].id)
-        self.engine.setProperty('rate', 150)
+        self.engine.setProperty('rate', 130)
 
-    def speak(self, text):
+    def text_to_voice(self, text):
         self.engine.say(text)
         self.engine.runAndWait()

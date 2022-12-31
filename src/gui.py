@@ -2,7 +2,7 @@ import PySimpleGUI as sg
 import pyaudio
 import numpy as np
 import math
-from listener import Listener
+from assistant import VoiceAssistant
 import threading
 
 
@@ -14,7 +14,7 @@ class ListenerGUI:
         self.audio_data = np.array([])
         self.audio_port = pyaudio.PyAudio()
         self.is_listening = False
-        self.listener = Listener()
+        self.assistant = VoiceAssistant()
         self.data = np.array([])
         self.thread = None
         
@@ -47,7 +47,7 @@ class ListenerGUI:
             self.window.find_element('Stop').Update(disabled=True)
             self.window.find_element('Listen').Update(disabled=False)
         self.is_listening = False
-        self.thread.join()
+        threading.kill_thread(self.thread.ident)
 
 
     def __callback(self, in_data, frame_count, time_info, status):
@@ -81,7 +81,8 @@ class ListenerGUI:
             
             
     def __listen_thread(self):
-        self.thread = threading.Thread(target=self.listener.audio_to_text)
+        self.thread = threading.Thread(target=self.assistant.interact)
+        self.thread.daemon = True
         self.thread.start()        
 
                                

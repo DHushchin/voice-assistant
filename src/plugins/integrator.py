@@ -1,38 +1,12 @@
-import logging
-import os
-import glob
-from os.path import isfile
-from importlib import import_module
+from plugins.modules.factory import PluginsFactory
 
 
 class Integrator:
-    
-    def __init__(self):
-        """ 
-            Load all modules into an array so they can be used when required
+    """
+        Integrator class
 
-            Inputs:
-             - plugin_path: Local path to the plugins directory
-        """
-
-        self.plugins = []
-        
-        plugin_paths = glob.glob(f'./modules/*.py')
-        plugin_paths = [f for f in plugin_paths if isfile(f)]
-
-        for path in plugin_paths:
-            basename, extension = os.path.splitext(path)
-            import_location = basename.replace("\\", ".")
-            import_location = import_location.replace("/", ".")
-
-            try:
-                plugin = import_module(import_location)
-            except Exception as e:
-                print(f'Could not load plugin {import_location}')
-                return
-
-            self.plugins.append(plugin)
-
+        This class is responsible for loading all plugins and executing them
+    """
 
     def generate_response(self, intent: str, entities: dict) -> str:
         """
@@ -45,21 +19,13 @@ class Integrator:
             Outputs:
             - response: Dictionary containing the plugin's responce in natural language
         """
-
-        active_plugins = [p for p in self.plugins if intent in p.accepted_intents]
-
-        if len(active_plugins) == 0:
-            return "Sorry, I don't know how to do that yet"
-
-        active_plugin = active_plugins[0]
-        for p in active_plugins:
-            if p != active_plugin:
-                if p.priority > active_plugin.priority:
-                    active_plugin = p
+        plugin = PluginsFactory(intent)
 
         try:
-            response = active_plugin.execute(intent, entities)
-        except:
-            response = f'Error executing plugin {active_plugin.__name__}'
+            response = plugin.execute(entities)
+        except Exception as e:
+            print(e)
+            print(f'Error executing plugin: {intent}')
+            response = ''
 
         return response
