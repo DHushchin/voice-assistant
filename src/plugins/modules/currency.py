@@ -1,0 +1,20 @@
+from forex_python.converter import CurrencyRates
+import pandas as pd
+import os
+
+class Currency:
+    def __init__(self):
+        self.c = CurrencyRates()     
+        self.data = pd.read_csv(f'{os.path.abspath(os.path.dirname(__file__))}/iso.csv')
+        print(self.data.head())
+        
+    def execute(self, entities): 
+        curr1, curr2 = entities[0][1], entities[1][1]
+
+        for i in range(len(self.data)):
+            if curr1 in str(self.data['Currency'][i]).lower():
+                curr1 = self.data['AlphabeticCode'][i]
+            if curr2 in str(self.data['Currency'][i]).lower():
+                curr2 = self.data['AlphabeticCode'][i]
+
+        return str(self.c.convert(curr1, curr2, 1))

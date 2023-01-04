@@ -1,6 +1,7 @@
 import numpy as np
 from transformers import DistilBertTokenizerFast
 
+
 class Tokenizer:
     def __init__(self, model_name: str):
         self.tokenizer = DistilBertTokenizerFast.from_pretrained(model_name)

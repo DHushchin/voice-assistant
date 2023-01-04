@@ -1,6 +1,6 @@
 from model.model import Model
 from model.data_processing.generator import DatasetGenerator
-from model.config import Config
+from config import Config
 from plugins.integrator import Integrator
 from speaker import Speaker
 from listener import Listener
@@ -78,7 +78,8 @@ class VoiceAssistant:
              - response: Response json object
         """
         
-        classification = self.nlp.classify(prompt, self.cfg.prompt_padding)        
+        classification = self.nlp.classify(prompt, self.cfg.prompt_padding)  
+        print(classification['intent'], classification['entities'])      
         response = self.integrator.generate_response(classification['intent'], classification['entities'])
 
         return response
@@ -88,9 +89,5 @@ class VoiceAssistant:
         while True:
             print('=> ', end='')
             prompt = self.listener.voice_to_text()
-
-            if (prompt.lower() == 'exit'):
-                break
-
             response = self.ask(prompt)
             self.speaker.text_to_voice(response)

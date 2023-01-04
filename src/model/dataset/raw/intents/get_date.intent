@@ -1,5 +1,7 @@
 What day is it?
 What's the date?
-{prepend_request} tell me the date
-{prepend_request} give me the date
-{prepend_request} tell me what day it is
+What date is {date}?
+What date it will be {date}?
+{prepend_request} tell me the date {date}
+{prepend_request} give me the date {date}
+{prepend_request} tell me what day it will be {date}

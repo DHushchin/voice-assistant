@@ -19,6 +19,9 @@ class Integrator:
             Outputs:
             - response: Dictionary containing the plugin's responce in natural language
         """
+        if intent == 'silence':
+            return ''
+            
         plugin = PluginsFactory(intent)
 
         try:
