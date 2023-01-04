@@ -97,7 +97,6 @@ class Model:
             metrics = tf.keras.metrics.CategoricalAccuracy('categorical_accuracy')
         )
 
-        self.model.summary()
     
     
     def train(self, dataset_path: str, epochs: int, batch_size: int):
@@ -112,6 +111,8 @@ class Model:
         """
         print('Training model...')
 
+        self.model.summary()
+        
         df_train = pd.read_pickle(dataset_path)
 
         x_train_ids, x_train_attention, y_train_entities = self.tokenizer.encode(
@@ -144,7 +145,6 @@ class Model:
              
         """
         print('Loading weights...')
-        print(model_path)
         self.model.load_weights(model_path)
 
 
