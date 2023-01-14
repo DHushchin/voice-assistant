@@ -14,16 +14,6 @@ class VoiceAssistant:
         self.listener = Listener()
         self.speaker = Speaker()
         
-        if train:
-            self.build_dataset()
-            self.build_model()
-            
-        self.load_model()
-
-
-    def load_model(self):
-        """ Load in a pre-trained NLP model """
-
         intent_label_path = f'{self.cfg.dataset_path}/intent_labels.json'
         entity_label_path = f'{self.cfg.dataset_path}/entity_labels.json'
 
@@ -34,6 +24,16 @@ class VoiceAssistant:
                 self.cfg.model_name
             )
         
+        if train:
+            self.build_dataset()
+            self.build_model()
+            
+        self.load_model()
+
+
+    def load_model(self):
+        """ Load in a pre-trained NLP model """
+        
         self.nlp.build_model()
         self.nlp.load_model(self.cfg.model_path)
 
@@ -41,16 +41,7 @@ class VoiceAssistant:
     def build_model(self):
         """ Build & train NLP model """
 
-        intent_label_path = f'{self.cfg.dataset_path}/intent_labels.json'
-        entity_label_path = f'{self.cfg.dataset_path}/entity_labels.json'
         dataset_path = f'{self.cfg.dataset_path}/train.pkl'
-
-        self.nlp = Model(
-                intent_label_path, 
-                entity_label_path, 
-                self.cfg.prompt_padding, 
-                self.cfg.model_name
-            )
         
         self.nlp.build_model()
         self.nlp.train(dataset_path, epochs=self.cfg.epochs, batch_size=self.cfg.batch_size)

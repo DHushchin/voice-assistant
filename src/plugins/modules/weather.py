@@ -1,3 +1,5 @@
+from base import BaseModule
+
 import datetime
 from timefhuman import timefhuman
 import geocoder
@@ -13,7 +15,7 @@ sys.path.append(parent)
 from config import Config
 
 
-class Weather():
+class WeatherModule(BaseModule):
     
     def __init__(self):
         self.cfg = Config()

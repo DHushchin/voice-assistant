@@ -15,12 +15,11 @@ class ListenerGUI:
         self.audio_port = pyaudio.PyAudio()
         self.is_listening = False
         self.assistant = VoiceAssistant()
-        self.data = np.array([])
         self.process = Pool(1)
         
         
     def __create_window(self):
-        AppFont = ('Helvetica', 14, 'bold italic')
+        app_font = ('Helvetica', 14, 'bold italic')
         sg.theme('DarkBlue13')
         layout = [
                     [sg.Image(filename='images/voice.gif', 
@@ -30,10 +29,10 @@ class ListenerGUI:
                                     size=(20, 20), key='prog_bar', 
                                     bar_color=('green', 'white'))],
                 
-                    [sg.Button('Listen', font=AppFont),
-                     sg.Button('Stop', font=AppFont, disabled=True),
-                     sg.Button('Exit', font=AppFont, pad=((202, 0), 0),
-                               button_color=('white', 'firebrick4'))]
+                    [sg.Button('Listen', font=app_font),
+                     sg.Button('Stop', font=app_font, disabled=True),
+                     sg.Button('Exit', font=app_font, pad=((202, 0), 0),
+                     button_color=('white', 'firebrick4'))]
                  ]
         
         self.window = sg.Window('Voice Assistant', layout, finalize=True)
@@ -53,7 +52,6 @@ class ListenerGUI:
 
     def __callback(self, in_data, frame_count, time_info, status):
         self.audio_data = np.frombuffer(in_data, dtype=np.int16)
-        self.data = np.append(self.data, self.audio_data)
         return (in_data, pyaudio.paContinue)
 
 
@@ -83,7 +81,7 @@ class ListenerGUI:
             
             
     def __listen_process(self):
-        res = self.process.apply_async(self.assistant.interact) 
+        self.process.apply_async(self.assistant.interact) 
 
                                
     def run(self):
@@ -101,7 +99,6 @@ class ListenerGUI:
                 self.__listen_process()
                 
             if self.is_listening:
-                # self.thread.join()
                 self.__listen_process()
 
             if event == 'Stop':

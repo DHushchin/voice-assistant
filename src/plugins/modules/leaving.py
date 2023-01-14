@@ -1,6 +1,8 @@
+from base import BaseModule
 import random
 
-class Leaving: 
+
+class LeavingModule(BaseModule): 
     def __init__(self, *args, **kwargs):
       self.vocabulary = ['bye', 'goodbye', 'see you later', 'see you soon', 'take care']
 

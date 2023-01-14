@@ -1,7 +1,10 @@
+from base import BaseModule
+
 import requests, webbrowser, bs4
 import wikipedia
 
-class GoogleSearch:   
+
+class SearchModule(BaseModule):   
     
     def execute(self, entities) -> str:    
         entities = [e[1] for e in entities]      
@@ -15,7 +18,7 @@ class GoogleSearch:
 
         try:
             wiki = f'Wikipedia says: {wikipedia.summary(" ".join(entities))}. I am also opening top 5 google pages for you.'
-        except wikipedia.exceptions.DisambiguationError as e:
+        except wikipedia.exceptions.DisambiguationError:
             wiki = 'Opening top 5 google pages for you.'
             
         return wiki
@@ -25,8 +28,8 @@ class GoogleSearch:
         res = requests.get('https://google.com/search?q=' + ' '.join(entities))
         res.raise_for_status()
         soup = bs4.BeautifulSoup(res.text, "html.parser")
-        linkElems = soup.select('div#main > div > div > div > a')
-        numOpen = min(5, len(linkElems))
-        for i in range(numOpen):
-            webbrowser.open('https://google.com' + linkElems[i].get('href'))
+        link_elems = soup.select('div#main > div > div > div > a')
+        num_open = min(5, len(link_elems))
+        for i in range(num_open):
+            webbrowser.open('https://google.com' + link_elems[i].get('href'))
         

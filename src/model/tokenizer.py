@@ -4,7 +4,7 @@ from transformers import DistilBertTokenizerFast
 
 class Tokenizer:
     def __init__(self, model_name: str):
-        self.tokenizer = DistilBertTokenizerFast.from_pretrained(model_name)
+        self.base_tokenizer = DistilBertTokenizerFast.from_pretrained(model_name)
         
     def encode(self, texts, texts_labels, max_len):  
             
@@ -22,13 +22,13 @@ class Tokenizer:
             - labels:         sequence of token-level labels as a np array
         """
 
-        input = [self.__tokenize_and_preserve_labels(
+        _input = [self.__tokenize_and_preserve_labels(
                 text, text_labels, max_len=max_len
                 ) for text, text_labels in zip(texts, texts_labels)]
 
-        input_ids = np.array([i[0] for i in input])
-        attention_masks = np.array([i[1] for i in input])
-        labels = np.array([i[2] for i in input])
+        input_ids = np.array([i[0] for i in _input])
+        attention_masks = np.array([i[1] for i in _input])
+        labels = np.array([i[2] for i in _input])
         
         return input_ids, attention_masks, labels
 
@@ -47,7 +47,7 @@ class Tokenizer:
             - attention_mask: sequence of attention masks as a np array
         """
 
-        input = self.tokenizer(
+        _input = self.base_tokenizer(
             texts,
             max_length=max_len,
             padding='max_length',
@@ -57,7 +57,7 @@ class Tokenizer:
             return_tensors='np'
         )
 
-        return input['input_ids'], input['attention_mask']
+        return _input['input_ids'], _input['attention_mask']
 
 
     def __tokenize_and_preserve_labels(self, text, text_labels, max_len):
@@ -79,7 +79,7 @@ class Tokenizer:
         attention_mask = []
 
         for word, label in zip(text.split(), text_labels):
-            tokenized_word = self.tokenizer.tokenize(word)
+            tokenized_word = self.base_tokenizer.tokenize(word)
             n_tokens = len(tokenized_word)
             
             tokenized_sequence.extend(tokenized_word)
@@ -100,7 +100,7 @@ class Tokenizer:
             attention_mask.append(0)
             labels.append(0)
 
-        token_ids = [self.tokenizer.convert_tokens_to_ids(token) for token in tokenized_sequence]
+        token_ids = [self.base_tokenizer.convert_tokens_to_ids(token) for token in tokenized_sequence]
 
         return token_ids, attention_mask, labels
     

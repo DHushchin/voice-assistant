@@ -1,6 +1,8 @@
+from base import BaseModule
 import random
 
-class Greetings:
+
+class GreetingsModule(BaseModule):
     def __init__(self):
       self.vocabulary = ['hello', 'greetings', 'happy to hear you']
 

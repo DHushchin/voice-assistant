@@ -1,12 +1,15 @@
+from base import BaseModule
+
 from forex_python.converter import CurrencyRates
 import pandas as pd
 import os
 
-class Currency:
+
+class CurrencyModule(BaseModule):
     def __init__(self):
         self.c = CurrencyRates()     
-        self.data = pd.read_csv(f'{os.path.abspath(os.path.dirname(__file__))}/iso.csv')
-        print(self.data.head())
+        self.data = pd.read_csv(f'{os.path.abspath(os.path.dirname(__file__))}/data/iso.csv')
+        
         
     def execute(self, entities): 
         curr1, curr2 = entities[0][1], entities[1][1]
