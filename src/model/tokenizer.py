@@ -106,4 +106,4 @@ class Tokenizer:
     
     
     def decode(self, token_ids):
-        return self.tokenizer.decode(token_ids)
+        return self.base_tokenizer.decode(token_ids)

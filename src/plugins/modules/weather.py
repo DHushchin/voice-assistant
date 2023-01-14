@@ -1,4 +1,4 @@
-from base import BaseModule
+from plugins.modules.base import BaseModule
 
 import datetime
 from timefhuman import timefhuman

@@ -1,4 +1,4 @@
-from base import BaseModule
+from plugins.modules.base import BaseModule
 
 from forex_python.converter import CurrencyRates
 import pandas as pd
@@ -7,7 +7,7 @@ import os
 
 class CurrencyModule(BaseModule):
     def __init__(self):
-        self.c = CurrencyRates()     
+        self.converter = CurrencyRates()     
         self.data = pd.read_csv(f'{os.path.abspath(os.path.dirname(__file__))}/data/iso.csv')
         
         
@@ -20,4 +20,4 @@ class CurrencyModule(BaseModule):
             if curr2 in str(self.data['Currency'][i]).lower():
                 curr2 = self.data['AlphabeticCode'][i]
 
-        return str(self.c.convert(curr1, curr2, 1))
+        return str(self.converter.convert(curr1, curr2, 1))
