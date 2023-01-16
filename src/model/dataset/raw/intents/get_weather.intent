@@ -1,4 +1,7 @@
 What's the weather in {city} {date}?
+What's the weather {date} in {city}?
+{prepend_request} weather in {city} {date}
+{prepend_request} weather {date} in {city}
 {prepend_request} give me the weather in {city} {date}
 {prepend_request} get the forecast for {date} in {city}
 {prepend_request} locate the forecast for the next {date} in {city}
@@ -7,3 +10,5 @@ What's the weather in {city} {date}?
 {prepend_request} find me forecast in {city} for {date}
 {prepend_request} find me forecast in {city} {date}
 {prepend_request} get the weather for {date} in {city}
+find me forecast in {city} {date}
+get the weather for {date} in {city}

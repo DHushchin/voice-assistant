@@ -1,8 +1,9 @@
-from plugins.modules.base import BaseModule
-import datetime
+from .base import BaseModule
+import datetime as dt
+import human_readable 
 
 
 class DateModule(BaseModule):
     def execute(self, entities) -> str:
-        return datetime.datetime.now().strftime('%d/%m/%Y')
+        return dt.date.today()
                  

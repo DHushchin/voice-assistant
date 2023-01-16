@@ -26,8 +26,9 @@ class WeatherModule(BaseModule):
         
     def execute(self, entities) -> str:        
         time = self.__get_time(entities)
-        time_delta = (time - datetime.datetime.now()).days
-
+        print(time)
+        time_delta = time.day - datetime.datetime.now().day
+        print(time_delta)
         if time_delta > 8:
             return "Forecasts can't be predicted  more than 7 days ahead"
         
@@ -44,15 +45,15 @@ class WeatherModule(BaseModule):
     
     
     def __get_time(self, entities):
-        time = datetime.datetime.now()
+        time = datetime.datetime.now().date()
 
         for e in entities:
-            if e[0] == 'datetime':
+            if e[0] == 'date':
                 predicted_time = timefhuman(e[1], now=time)
                 if predicted_time != []:
                     time = predicted_time
                 break
-      
+            
         return time
      
      

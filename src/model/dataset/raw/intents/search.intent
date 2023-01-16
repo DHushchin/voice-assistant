@@ -5,3 +5,11 @@
 {prepend_request} search {search_query}
 {prepend_request} google for {search_query}
 {prepend_request} find out in google {search_query}
+{prepend_request} google what is {search_query}
+{prepend_request} search what is {search_query}
+{prepend_request} google how to {search_query}
+{prepend_request} search how to {search_query}
+google {search_query}
+search {search_query}
+google what is {search_query}
+search what is {search_query}

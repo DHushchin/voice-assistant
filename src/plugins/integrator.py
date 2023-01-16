@@ -1,11 +1,11 @@
-from modules.time import TimeModule
-from modules.date import DateModule
-from modules.greetings import GreetingsModule
-from modules.leaving import LeavingModule
-from modules.joke import JokeModule
-from modules.weather import WeatherModule
-from modules.search import SearchModule
-from modules.currency import CurrencyModule
+from .modules.time import TimeModule
+from .modules.date import DateModule
+from .modules.greetings import GreetingsModule
+from .modules.leaving import LeavingModule
+from .modules.joke import JokeModule
+from .modules.weather import WeatherModule
+from .modules.search import SearchModule
+from .modules.currency import CurrencyModule
 
 
 class Integrator:

@@ -1,4 +1,4 @@
-from plugins.modules.base import BaseModule
+from .base import BaseModule
 
 import requests, webbrowser, bs4
 import wikipedia
@@ -17,8 +17,8 @@ class SearchModule(BaseModule):
         wiki = None
 
         try:
-            wiki = f'Wikipedia says: {wikipedia.summary(" ".join(entities))}. I am also opening top 5 google pages for you.'
-        except wikipedia.exceptions.DisambiguationError:
+            wiki = f'Wikipedia says: {wikipedia.summary(" ".join(entities), sentences=3)}. I am also opening top 5 google pages for you.'
+        except:
             wiki = 'Opening top 5 google pages for you.'
             
         return wiki

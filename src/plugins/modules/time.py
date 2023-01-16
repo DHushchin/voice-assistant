@@ -1,4 +1,4 @@
-from plugins.modules.base import BaseModule
+from .base import BaseModule
 import datetime
 
 

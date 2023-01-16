@@ -14,7 +14,7 @@ class ListenerGUI:
         self.audio_data = np.array([])
         self.audio_port = pyaudio.PyAudio()
         self.is_listening = False
-        self.assistant = VoiceAssistant()
+        self.assistant = VoiceAssistant(train = False)
         self.process = Pool(1)
         
         
@@ -46,8 +46,7 @@ class ListenerGUI:
             self.window.find_element('Stop').Update(disabled=True)
             self.window.find_element('Listen').Update(disabled=False)
         self.is_listening = False
-        self.process.terminate()
-        self.process.join(timeout=2)
+        self.window.close()
 
 
     def __callback(self, in_data, frame_count, time_info, status):

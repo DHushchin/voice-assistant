@@ -15,7 +15,7 @@ class Listener:
                 audio_data = self.rec.listen(source, timeout=5, phrase_time_limit=5)   
             except sr.WaitTimeoutError:
                 audio_data = None 
-              
+
         return audio_data          
     
     
@@ -24,7 +24,7 @@ class Listener:
             print('Recognizing...')
             text = self.rec.recognize_google(audio_data, show_all=False, language='en-US')
         except sr.UnknownValueError:
-            text = "Sorry, I couldn't make that out. Try again!"  
+            text = None  
             
         return text  
 
@@ -35,7 +35,7 @@ class Listener:
         if audio_data is not None:
             text = self.__recognize(audio_data)
         else:
-            text = "Sorry, I can't hear you!"
+            text = None
             
         return text
         

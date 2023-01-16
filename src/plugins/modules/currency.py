@@ -1,4 +1,4 @@
-from plugins.modules.base import BaseModule
+from .base import BaseModule
 
 from forex_python.converter import CurrencyRates
 import pandas as pd
@@ -13,7 +13,7 @@ class CurrencyModule(BaseModule):
         
     def execute(self, entities): 
         curr1, curr2 = entities[0][1], entities[1][1]
-
+        print(curr1, curr2)
         for i in range(len(self.data)):
             if curr1 in str(self.data['Currency'][i]).lower():
                 curr1 = self.data['AlphabeticCode'][i]

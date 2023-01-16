@@ -19,7 +19,7 @@ class Config:
         self.prompt_padding = 128
         self.duplicates = True
         self.model_name = 'distilbert-base-uncased'
-        self.epochs = 1
+        self.epochs = 2
         self.batch_size = 4
         
     def __init_keys(self):

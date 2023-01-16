@@ -16,13 +16,19 @@ class VoiceAssistant:
         
         intent_label_path = f'{self.cfg.dataset_path}/intent_labels.json'
         entity_label_path = f'{self.cfg.dataset_path}/entity_labels.json'
+        
+        self.generator = DatasetGenerator(
+            dataset_path=self.cfg.dataset_path, 
+            samples_per_intent=self.cfg.samples_per_intent, 
+            duplicates=self.cfg.duplicates
+        )
 
         self.nlp = Model(
-                intent_label_path, 
-                entity_label_path, 
-                self.cfg.prompt_padding, 
-                self.cfg.model_name
-            )
+            intent_label_path, 
+            entity_label_path, 
+            self.cfg.prompt_padding, 
+            self.cfg.model_name
+        )
         
         if train:
             self.build_dataset()
@@ -52,13 +58,7 @@ class VoiceAssistant:
         """ Build a dataset based on the provided intents & entities """
         print('Generating a dataset...')
         
-        generator = DatasetGenerator(
-            dataset_path=self.cfg.dataset_path, 
-            samples_per_intent=self.cfg.samples_per_intent, 
-            duplicates=self.cfg.duplicates
-            )
-        
-        generator.generate_dataset()
+        self.generator.generate_dataset()
 
 
     def ask(self, prompt: str) -> dict:
@@ -80,5 +80,6 @@ class VoiceAssistant:
         while True:
             print('=> ', end='')
             prompt = self.listener.voice_to_text()
-            response = self.ask(prompt)
-            self.speaker.text_to_voice(response)
+            if prompt:
+                response = self.ask(prompt)
+                self.speaker.text_to_voice(response)
