@@ -13,6 +13,7 @@ class VoiceAssistant:
         self.integrator = Integrator()
         self.listener = Listener()
         self.speaker = Speaker()
+        self.interacting = True
         
         intent_label_path = f'{self.cfg.dataset_path}/intent_labels.json'
         entity_label_path = f'{self.cfg.dataset_path}/entity_labels.json'
@@ -77,7 +78,7 @@ class VoiceAssistant:
 
 
     def interact(self):
-        while True:
+        while self.interacting:
             print('=> ', end='')
             prompt = self.listener.voice_to_text()
             if prompt:

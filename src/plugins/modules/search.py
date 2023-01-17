@@ -7,7 +7,9 @@ import wikipedia
 class SearchModule(BaseModule):   
     
     def execute(self, entities) -> str:    
-        entities = [e[1] for e in entities]      
+        entities = [e[1] for e in entities]
+        if len(entities) == 0:
+            return 'Sorry, I did not understand what you wanted to search for.'
         wiki = self.__wiki(entities)
         self.__google(entities)
         return wiki
